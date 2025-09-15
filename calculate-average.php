@@ -55,11 +55,11 @@ function process(int $start, int $end): array
         if (($s = &$result[$k]) !== null)
         {
             if ($v < $s[0]) $s[0] = $v;
-            elseif ($v > $s[1]) $s[1] = $v;
+            if ($v > $s[1]) $s[1] = $v;
             $s[2] += $v;
             $s[3] += 1;
         }
-        else $result[$k] = [$v, $v, $v, 1]; // ...min, max, sum, count
+        else $s = [$v, $v, $v, 1]; // ...min, max, sum, count
     }
     return $result;
 }
@@ -79,8 +79,7 @@ foreach ($chunks as $_ch) // fork children...
     if ($pid === 0)
     {
         fclose($pair[0]);
-        $c_results = process(...$_ch);
-        @fwrite($pair[1], serialize($c_results));
+        @fwrite($pair[1], serialize(process(...$_ch)));
         fclose($pair[1]);
         exit(0);
     }
@@ -101,18 +100,18 @@ while ($streams) // read from children...
         {
             $rid = get_resource_id($_rs);
             $d = stream_get_contents($_rs);
-            if ($d === false || $d === "") // aggregate results...
+            if ($d === "" || $d === false) // aggregate results...
             {
                 foreach (unserialize($data[$rid]) as $k => $v)
                 {
                     if (($s = &$result[$k]) !== null)
                     {
                         if ($v[0] < $s[0]) $s[0] = $v[0];
-                        elseif ($v[1] > $s[1]) $s[1] = $v[1];
+                        if ($v[1] > $s[1]) $s[1] = $v[1];
                         $s[2] += $v[2];
                         $s[3] += $v[3];
                     }
-                    else $result[$k] = $v;
+                    else $s = $v;
                 }
                 fclose($_rs);
                 unset($data[$rid]);
