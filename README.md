@@ -73,12 +73,12 @@ Execution time: 14.7163 seconds
 performance
 -
 On my machine, a MacBook Pro (16-inch, 2022) M2 Pro (12 core) / 16GB unified memory, running with 24 processes, the 
-solution runs in about 15 seconds. 5 runs gave times between `14.7981` and `14.9565` seconds. Taking the average of 
-the remaining 3 runs gives `14.8735` seconds.
+solution runs in about 15 seconds. 5 runs resulted in times between `14.7981` and `14.9565` seconds, with the remaining
+3 runs resulting in an average of `14.8735` seconds.
 
 running in docker
 -
-You can also run the solution in a docker container. A `Dockerfile` is provided. to build the latest `php` with the
+You can also run the solution in a docker container. A `Dockerfile` is provided to build the latest `php` with the
 `pcntl` extension enabled.  Running the following will build the image with the tag `1brc-php`, create the input file
 with 1 billion records, and run the solution with 24 processes.  The performance with the additional overhead of docker
 virtualization is about `+10` seconds or `24.3791` seconds on average.
